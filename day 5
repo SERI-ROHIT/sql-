@@ -1,0 +1,194 @@
+ CREATE DATABASE TEMP ;
+USE TEMP;
+CREATE TABLE CUSTOMER(
+ID INTEGER PRIMARY KEY,
+CNAME VARCHAR(224),
+ADDRESS VARCHAR(225),
+GENDER CHAR(2),
+CITY VARCHAR(222),
+PINCODE INTEGER
+);
+INSERT INTO CUSTOMER VALUES
+(1251, 'RAM KUMAR','DILBAGH','M' , 'JALANDHAR',144411);
+
+INSERT INTO CUSTOMER VALUES
+(1300, 'SHYAM KUMAR','LUDHIANA','M' , 'LUDHIANA',144311);
+INSERT INTO CUSTOMER VALUES
+(11, ' KUMAR','MUMBAI','M' , 'MUMBAI',234003);
+INSERT INTO CUSTOMER VALUES
+(151, 'RAMU KUMAR','GOA','M' , 'MNP AIRPORT',143211);
+SELECT * FROM CUSTOMER;
+INSERT INTO CUSTOMER VALUES
+(1512, 'RITIKA KUMARI','MANALI','F' , 'HIMACHAL',143218);
+INSERT INTO CUSTOMER VALUES
+(1, 'RAM KUMAR','MANALI','F' , 'UP',142318);
+
+-- DML--
+
+UPDATE CUSTOMER SET ADDRESS = 'MUMBAI', GENDER = 'M'  WHERE ID = 151;
+
+-- UPDATE MULTIPLE ROWS--
+SET SQL_SAFE_UPDATES= 1;
+UPDATE  CUSTOMER SET PINCODE= 111000;
+UPDATE CUSTOMER SET PINCODE=PINCODE+10;
+
+
+-- DELETE COMMAND--
+DELETE  FROM CUSTOMER WHERE ID = 11;
+DELETE FROM CUSTOMER;
+
+-- REPLACE --
+
+REPLACE INTO CUSTOMER (ID, CITY)
+VALUES (1215,  'COLONY');
+REPLACE INTO CUSTOMER (ID, CNAME, CITY)
+VALUES(1333, 'CODEHELP','COLONY RANCHI');
+UPDATE CUSTOMER SET ADDRESS= 'JHARKHAND', GENDER= 'NA',PINCODE= 112323  WHERE ID= 1333;
+REPLACE INTO CUSTOMER SET ID= 1300, CNAME = 'MAC', CITY= 'PATNA';
+
+REPLACE INTO CUSTOMER  (CNAME , CITY)
+SELECT CNAME , CITY
+FROM CUSTOMER WHERE ID= 1333;
+
+ SELECT * FROM CUSTOMER;
+ 
+ CREATE TABLE ORDER_DETAILS(
+ORDER_ID INTEGER PRIMARY KEY,
+DELIVERY_DATE DATE, 
+CUST_ID INT, 
+FOREIGN KEY(CUST_ID) REFERENCES CUSTOMER (ID) ON DELETE CASCADE
+);
+
+INSERT INTO ORDER_DETAILS VALUES
+(3, '2019-09-11',1);
+INSERT INTO ORDER_DETAILS VALUES
+(4, '2019-09-12',1);
+
+DELETE FROM order_details WHERE CUST_ID = 1;
+SELECT * FROM order_details;
+
+---------------------------------------------------------------------------------------------------------
+
+-- joins in sql--
+-- INNER JOIN
+create table employee(
+id int primary key,
+fname varchar(238),
+lname varchar(238),
+age int ,
+email_id varchar(250),
+phone_no char(10),
+city varchar(220)
+);
+
+-----drop table  employee----;
+
+ insert into employee VALUES
+(1, 'aman', 'kumar', 32, 'aman@gmail.com',9213674836, 'punjab');
+insert into employee VALUES
+(2, 'yagna', 'kr', 23, 'kr@gmail.com',9213674789, 'jharkhand');
+insert into employee VALUES
+(3, 'rahul', 'BD', 22, 'rahul@gmail.com',9127367483, 'mumbai');
+insert into employee VALUES
+(4, 'jatin', 'kumar', 31, 'jatin@gmail.com',9213687836, 'goa');
+insert into employee VALUES
+(5, 'PK', 'kumar', 21, 'pkkumar@gmail.com',9213674836, 'tamilnadu');
+
+ 
+select * from employee;
+
+create table project (
+id int ,
+empID int primary key,
+name varchar(220),
+startdate DATE NOT NULL,
+clientID int,
+FOREIGN  KEY(empID) REFERENCES employee (id) ON DELETE CASCADE
+);
+
+---- drop table project---- ;
+INSERT INTO  PROJECT VALUES
+(1, 1, 'A', '2021-04-21', 3);
+INSERT INTO  PROJECT VALUES
+(2, 2, 'B', '2021-03-12', 1);
+
+INSERT INTO  PROJECT VALUES
+(3, 3, 'C', '2021-01-16', 5);
+INSERT INTO  PROJECT VALUES
+(4, 4, 'D', '2021-04-27', 2);
+INSERT INTO  PROJECT VALUES
+(5, 5, 'E', '2021-05-01', 4);
+
+
+
+SELECT * FROM PROJECT ;
+
+CREATE TABLE CLIENT (
+    ID INT PRIMARY KEY,
+    fname VARCHAR(220),
+    lname VARCHAR(229),
+    age INT,
+    emailID VARCHAR(259),
+    phone_no CHAR(10),
+    city VARCHAR(550),
+    empID INT,
+    FOREIGN KEY (empID) REFERENCES project (empID) ON DELETE CASCADE
+);
+
+insert into client values
+(1 , 'mac', 'roger', 42, 'mac@gmail.com', 9128754222, 'kolkata', 3);
+insert into client values
+(2 , 'max', 'ponter', 32, 'max@gmail.com', 9128854222, 'jaipur', 3);
+insert into client values
+(3 , 'peter', 'jain', 22, 'peter@gmail.com', 9228754222, 'kolkata', 1);
+insert into client values
+(4 , 'sushant', 'singh', 32, 'singh@gmail.com', 9228754222, 'patna', 5);
+insert into client values
+(5 , 'seri ', 'rohit',22, 'seri@gmail.com', 9128754112, 'ranchi', 2);
+
+select * from client;
+
+-- ques of inner join
+--- list all the employee id , name,  along with the project allocated to it--
+
+select e.id, e.fname,e.lname ,p.id,p.name from employee as e
+inner join project as p on e.id= p.empID;
+
+-- without using inner join--
+select e.id, e.fname,e.lname ,p.id,p.name from employee as e,
+project as p where  e.id= p.empID;
+
+--Below query combine the both the table employee and project --
+
+select * from employee as e
+inner join project as p on e.id= p.empID;
+
+--- quest . fetch all the details of employee id and their contact detail who have been working 
+-- from jaipur with the client name working in jharkahnd---
+
+select e.id, e. email_id, e.phone_no, c.fname, c.lname from employee as e
+inner join client as c on e.id = c. empID where  e. city= 'jaipur'AND c.city='ranchi';
+
+----- left join --
+--fetch the each details of project allocated  to each employee--
+
+select * from employee as e
+left join project as p on e.id= p.empID;
+
+
+-- right join--
+--list out all the projrect along with the employee name and their respective allocated project--
+
+select p.id, p.name, e.fname, e.lname, e.email_id from employee as e 
+right join project as p on e.id=p.empID;
+
+-- cross join --
+ --list out the combination  possible for the employee name and project that can exist--
+ 
+ select e.fname, e.lname ,p.id, p.name from employee as e
+ cross join project as p;
+
+
+ -- union ---
+ select * from employee
+ union select * from project;
