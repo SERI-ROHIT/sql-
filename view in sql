@@ -1,0 +1,12 @@
+-----------view in sql--  is is type of chasma --- 
+-- creating a view
+
+create view custom_view as select fname, age, lname  from employee;
+
+--viewing from view---- it will remove all irrelevent information 
+select * from custom_view;
+-- alter the view--
+alter view custom_view as select fname ,lname,age from  employee;
+
+-- drop the view-
+ drop view if exists custom_view;
