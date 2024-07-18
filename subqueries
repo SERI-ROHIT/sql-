@@ -1,0 +1,15 @@
+--- alternative method to join---
+nested queries
+
+outer queries depends on inner queries-
+--  emp details having age>avg(age)
+  select * from employee where id in(
+  select empID from project group by empID having count(empID)>1
+  );
+
+-- from clause--
+-- select max age person whose first name =='a'---
+  select max (age) from (select * from employee where fname like '%a');
+
+  
+  
